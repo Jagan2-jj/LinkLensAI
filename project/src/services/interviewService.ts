@@ -35,7 +35,7 @@ export const interviewService = {
     targetRole?: string;
     numQuestions?: number;
   }): Promise<InterviewQuestion[]> {
-    const res = await fetch('http://localhost:3001/api/interview/generate-questions', {
+    const res = await fetch('https://linklensai-7.onrender.com/api/interview/generate-questions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(params),
