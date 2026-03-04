@@ -6,7 +6,7 @@ export class AIAnalysisService {
   async generateAnalysis(profileData: Record<string, unknown>): Promise<Partial<ProfileAnalysis>> {
     try {
       const prompt = `Analyze the following LinkedIn profile data. For each section (Summary, Experience, Skills, Education), provide:\n- A score (0-100)\n- 2-3 strengths\n- 2-3 improvements\nAlso provide:\n- An overall score (0-100)\n- Recommended keywords\n- Industry\nReturn ONLY a JSON object with this structure:\n{\n  "overallScore": 92,\n  "summary": { "score": 90, "strengths": [...], "improvements": [...] },\n  "experience": { "score": 85, "strengths": [...], "improvements": [...] },\n  "skills": { "score": 88, "strengths": [...], "improvements": [...] },\n  "education": { "score": 80, "strengths": [...], "improvements": [...] },\n  "keywords": [...],\n  "industry": "Technology"\n}\nProfile Data: ${JSON.stringify(profileData)}\nDo NOT include any explanation, markdown, or code block. Only output the JSON object.`;
-      const res = await fetch('http://localhost:3001/api/ai-assistant', {
+      const res = await fetch('https://linklensai-7.onrender.com/api/ai-assistant', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt, profileData }),
