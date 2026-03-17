@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE } from '../config/api';
 
 const LinkedInCallback: React.FC = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const LinkedInCallback: React.FC = () => {
       setLoading(false);
       return;
     }
-    fetch('http://localhost:3001/api/auth/linkedin/callback', {
+    fetch(`${API_BASE}/api/auth/linkedin/callback`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code }),
@@ -28,7 +29,7 @@ const LinkedInCallback: React.FC = () => {
           // Save LinkedIn access token to user in localStorage
           let user = JSON.parse(localStorage.getItem('linklens_user') || '{}');
           // Fetch LinkedIn profile to get the name and picture
-          fetch('http://localhost:3001/api/linkedin/profile', {
+          fetch(`${API_BASE}/api/linkedin/profile`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ accessToken: data.access_token }),
@@ -82,7 +83,7 @@ const LinkedInCallback: React.FC = () => {
           onClick={() => {
             // Restart OAuth flow
             const clientId = import.meta.env.VITE_LINKEDIN_CLIENT_ID || '86t08xffcmxl9z';
-            const redirectUri = 'http://localhost:5173/auth/linkedin/callback';
+            const redirectUri = import.meta.env.VITE_FRONTEND_URL ? import.meta.env.VITE_FRONTEND_URL + '/auth/linkedin/callback' : 'http://localhost:5173/auth/linkedin/callback';
             const scope = 'openid profile email';
             const state = Math.random().toString(36).substring(2);
             const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${state}&prompt=login`;

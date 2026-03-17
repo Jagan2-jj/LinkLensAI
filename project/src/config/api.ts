@@ -1,11 +1,14 @@
 // API Configuration with secure environment variable handling
+// API_BASE points to the backend server — set VITE_API_BASE_URL in production
+export const API_BASE: string = (import.meta.env.VITE_API_BASE_URL as string) || 'http://localhost:3001';
+
 export const API_CONFIG = {
   // Validate required environment variables
   LINKEDIN_API_KEY: import.meta.env.VITE_LINKEDIN_API_KEY,
   LINKEDIN_API_URL: import.meta.env.VITE_LINKEDIN_API_URL || 'https://api.linkedin.com/v2',
   GOOGLE_CLIENT_ID: import.meta.env.VITE_GOOGLE_CLIENT_ID,
   OPENAI_API_KEY: import.meta.env.VITE_OPENAI_API_KEY,
-  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api',
+  API_BASE_URL: API_BASE,
   APP_ENV: import.meta.env.VITE_APP_ENV || 'development',
 };
 

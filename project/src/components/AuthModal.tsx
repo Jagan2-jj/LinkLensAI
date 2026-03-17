@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { API_BASE } from '../config/api';
 import { Chrome, Sparkles, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { GlassmorphismCard } from './GlassmorphismCard';
@@ -82,7 +83,7 @@ export const AuthModal: React.FC = () => {
     if (formData.isSignUp) {
       // Step 1: Send OTP
       try {
-        const res = await fetch('http://localhost:3001/api/auth/send-otp', {
+        const res = await fetch(`${API_BASE}/api/auth/send-otp`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: formData.email }),
@@ -111,7 +112,7 @@ export const AuthModal: React.FC = () => {
     setOtpError(null);
     if (!pendingSignup) return;
     try {
-      const res = await fetch('http://localhost:3001/api/auth/verify-otp', {
+      const res = await fetch(`${API_BASE}/api/auth/verify-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: pendingSignup.email, otp }),

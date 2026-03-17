@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { API_BASE } from '../config/api';
 import { useNavigate } from 'react-router-dom';
 import { LandingNavbar } from './LandingNavbar';
 import { LoginCard } from './LoginCard';
@@ -171,7 +172,7 @@ const AnimatedLanding: React.FC<AnimatedLandingProps> = ({ showLogin, setShowLog
 
   // Fetch reviews from backend
   useEffect(() => {
-    fetch('http://localhost:3001/api/reviews')
+    fetch(`${API_BASE}/api/reviews`)
       .then(res => res.json())
       .then(data => {
         let reviews = Array.isArray(data) ? data : [];
@@ -211,7 +212,7 @@ const AnimatedLanding: React.FC<AnimatedLandingProps> = ({ showLogin, setShowLog
       }
     } catch { }
     try {
-      const res = await fetch('http://localhost:3001/api/reviews', {
+      const res = await fetch(`${API_BASE}/api/reviews`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

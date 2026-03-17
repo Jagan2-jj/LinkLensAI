@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { API_BASE } from '../config/api';
 import { Header } from '../components/Header';
 import { GlassmorphismCard } from '../components/GlassmorphismCard';
 import { ArrowLeft, FileText, UploadCloud, ClipboardList, Sparkles, CheckCircle2 } from 'lucide-react';
@@ -44,7 +45,7 @@ const ResumeAnalyzerPage: React.FC = () => {
       if (resumeFile) {
         const formData = new FormData();
         formData.append('resume', resumeFile);
-        const res = await fetch('http://localhost:3001/api/resume/parse', {
+        const res = await fetch(`${API_BASE}/api/resume/parse`, {
           method: 'POST',
           body: formData,
         });
@@ -56,7 +57,7 @@ const ResumeAnalyzerPage: React.FC = () => {
         }
         sections = data.sections;
       } else {
-        const res = await fetch('http://localhost:3001/api/resume/parse', {
+        const res = await fetch(`${API_BASE}/api/resume/parse`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text: resumeText }),
@@ -70,7 +71,7 @@ const ResumeAnalyzerPage: React.FC = () => {
         sections = data.sections;
       }
       // 2. ATS scoring
-      const atsRes = await fetch('http://localhost:3001/api/resume/ats-score', {
+      const atsRes = await fetch(`${API_BASE}/api/resume/ats-score`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sections, jobDescription: jobDesc, companyUrl: companyUrl }),
@@ -107,7 +108,7 @@ const ResumeAnalyzerPage: React.FC = () => {
     setIsAnalyzing(true);
     try {
       // Re-analyze with updated sections
-      const atsRes = await fetch('http://localhost:3001/api/resume/ats-score', {
+      const atsRes = await fetch(`${API_BASE}/api/resume/ats-score`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sections, jobDescription: jobDesc, companyUrl: companyUrl }),

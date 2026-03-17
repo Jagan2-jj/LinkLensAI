@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import LinklensLogo from '../../Linklens.jpg';
+import { API_BASE } from '../config/api';
 
 interface Message {
   sender: 'user' | 'ai';
@@ -48,7 +49,7 @@ export const AIAgent: React.FC = () => {
     setLoading(true);
     setInput('');
     try {
-      const res = await fetch('http://localhost:3001/api/ai-assistant', {
+      const res = await fetch(`${API_BASE}/api/ai-assistant`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: input }),

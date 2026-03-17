@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { API_BASE } from '../config/api';
 import { Link, Send, Sparkles } from 'lucide-react';
 import { GlassmorphismCard } from './GlassmorphismCard';
 import { GlowingEffect } from '@/components/ui/glowing-effect';
@@ -40,7 +41,7 @@ export const UrlInput: React.FC<UrlInputProps> = ({ onAnalyze, isLoading }) => {
       const accessToken = user?.linkedinAccessToken;
       if (accessToken) {
         try {
-          const res = await fetch('http://localhost:3001/api/linkedin/profile', {
+          const res = await fetch(`${API_BASE}/api/linkedin/profile`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ accessToken }),
@@ -79,7 +80,7 @@ export const UrlInput: React.FC<UrlInputProps> = ({ onAnalyze, isLoading }) => {
         // Refetch LinkedIn id and vanity after sign-in
         (async () => {
           try {
-            const res = await fetch('http://localhost:3001/api/linkedin/profile', {
+            const res = await fetch(`${API_BASE}/api/linkedin/profile`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ accessToken: updatedUser.linkedinAccessToken }),
@@ -163,7 +164,7 @@ export const UrlInput: React.FC<UrlInputProps> = ({ onAnalyze, isLoading }) => {
                 if (isRedirecting) return;
                 setIsRedirecting(true);
                 const clientId = import.meta.env.VITE_LINKEDIN_CLIENT_ID || '86t08xffcmxl9z';
-                const redirectUri = 'http://localhost:5173/auth/linkedin/callback';
+                const redirectUri = import.meta.env.VITE_FRONTEND_URL ? import.meta.env.VITE_FRONTEND_URL + '/auth/linkedin/callback' : 'http://localhost:5173/auth/linkedin/callback';
                 const scope = 'openid profile email';
                 const state = Math.random().toString(36).substring(2);
                 const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${state}&prompt=login`;

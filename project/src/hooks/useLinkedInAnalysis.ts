@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_BASE } from '../config/api';
 import { ProfileAnalysis } from '../types';
 import { linkedInApi } from '../services/linkedinApi';
 import { aiAnalysisService } from '../services/aiAnalysisService';
@@ -189,7 +190,7 @@ async function getProfileData(profileUrl: string): Promise<any> {
   const accessToken = user?.linkedinAccessToken;
   if (accessToken) {
     // 2. Fetch profile data from your backend
-    const res = await fetch('http://localhost:3001/api/linkedin/profile', {
+    const res = await fetch(`${API_BASE}/api/linkedin/profile`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ accessToken }),

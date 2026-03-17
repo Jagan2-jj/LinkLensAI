@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { API_BASE } from '../config/api';
 import {
   Linkedin, Info, BookOpen, Briefcase, Sparkles, GraduationCap, Lightbulb, ArrowLeft, Trophy, Star, Award, BarChart2, CheckCircle, XCircle, Activity, Wand2, User
 } from 'lucide-react';
@@ -195,7 +196,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ analysis, onBack }) 
     setAiLoading(true);
     try {
       const prompt = `Rewrite the following LinkedIn ${sectionLabel} section to maximize its score and impact. Make it more compelling, keyword-rich, and professional. Return only the improved text.\nSection: ${currentContent}\nProfile context: ${JSON.stringify(getProfileContext())}`;
-      const res = await fetch('http://localhost:3001/api/ai-assistant', {
+      const res = await fetch(`${API_BASE}/api/ai-assistant`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt }),
@@ -228,7 +229,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ analysis, onBack }) 
       const userObj = JSON.parse(localStorage.getItem('linklens_user') || '{}');
       const accessToken = userObj?.linkedinAccessToken;
       if (!accessToken) throw new Error('No LinkedIn access token');
-      const res = await fetch('http://localhost:3001/api/linkedin/profile', {
+      const res = await fetch(`${API_BASE}/api/linkedin/profile`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ accessToken }),

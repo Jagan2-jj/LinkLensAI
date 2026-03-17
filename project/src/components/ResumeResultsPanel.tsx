@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE } from '../config/api';
 import { GlassmorphismCard } from './GlassmorphismCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, CheckCircle2, AlertTriangle, FileText, Briefcase, BookOpen, GraduationCap, ChevronDown, ChevronUp, Lightbulb, Users, CheckCircle, XCircle, TrendingUp, Trophy, Building, Scale } from 'lucide-react';
@@ -107,7 +108,7 @@ export const ResumeResultsPanel: React.FC<ResumeResultsPanelProps> = ({ result, 
     setLoading(true);
     setAISuggestion(null);
     setEnhancedSection(section);
-    const res = await fetch('http://localhost:3001/api/resume/enhance-section', {
+    const res = await fetch(`${API_BASE}/api/resume/enhance-section`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ section, text }),

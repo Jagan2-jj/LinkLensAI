@@ -1,3 +1,5 @@
+import { API_BASE } from '../config/api';
+
 export type InterviewQuestion = {
   id: string;
   type: 'technical' | 'behavioral' | 'situational' | string;
@@ -35,7 +37,7 @@ export const interviewService = {
     targetRole?: string;
     numQuestions?: number;
   }): Promise<InterviewQuestion[]> {
-    const res = await fetch('https://linklensai-7.onrender.com/api/interview/generate-questions', {
+    const res = await fetch(`${API_BASE}/api/interview/generate-questions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(params),
@@ -52,7 +54,7 @@ export const interviewService = {
     if (role) params.append('role', role);
     if (level) params.append('level', level);
     
-    const res = await fetch(`http://localhost:3001/api/interview/industry-templates/${encodeURIComponent(industry)}?${params}`);
+    const res = await fetch(`${API_BASE}/api/interview/industry-templates/${encodeURIComponent(industry)}?${params}`);
     const data = await res.json();
     if (!res.ok || !Array.isArray(data.questions)) {
       throw new Error(data.error || 'Failed to fetch industry templates');
@@ -65,7 +67,7 @@ export const interviewService = {
     answer: string;
     context?: any;
   }): Promise<AnswerValidation> {
-    const res = await fetch('http://localhost:3001/api/interview/validate-answer', {
+    const res = await fetch(`${API_BASE}/api/interview/validate-answer`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(params),
@@ -82,7 +84,7 @@ export const interviewService = {
     answer: string;
     context?: any;
   }): Promise<ScoredAnswer> {
-    const res = await fetch('http://localhost:3001/api/interview/score-answer', {
+    const res = await fetch(`${API_BASE}/api/interview/score-answer`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(params),
@@ -100,7 +102,7 @@ export const interviewService = {
     questions: InterviewQuestion[];
     answers: Array<{ questionId: string; answer: string; result: ScoredAnswer }>;
   }): Promise<string> {
-    const res = await fetch('http://localhost:3001/api/interview/save', {
+    const res = await fetch(`${API_BASE}/api/interview/save`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(params),
@@ -113,7 +115,7 @@ export const interviewService = {
   },
 
   async fetchHistory(email: string) {
-    const res = await fetch(`http://localhost:3001/api/interview/history?email=${encodeURIComponent(email)}`);
+    const res = await fetch(`${API_BASE}/api/interview/history?email=${encodeURIComponent(email)}`);
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed to fetch history');
     return data.sessions as any[];

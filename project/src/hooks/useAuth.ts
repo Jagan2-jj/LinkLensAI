@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { User } from '../types';
 import { CredentialResponse, TokenResponse } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
+import { API_BASE } from '../config/api';
 
 interface GoogleDecodedToken {
   name: string;
@@ -57,7 +58,7 @@ export const useAuth = () => {
       if (!res.ok) throw new Error('Failed to fetch user info from Google');
       const googleUser: GoogleDecodedToken = await res.json();
       // Send to backend for upsert
-      const backendRes = await fetch('http://localhost:3001/api/auth/google', {
+      const backendRes = await fetch(`${API_BASE}/api/auth/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -97,7 +98,7 @@ export const useAuth = () => {
     try {
       let endpoint = isSignUp ? '/api/auth/register' : '/api/auth/login';
       const body = isSignUp ? { email, password, name } : { email, password };
-      const res = await fetch(`http://localhost:3001${endpoint}`, {
+      const res = await fetch(`${API_BASE}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
