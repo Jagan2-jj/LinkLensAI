@@ -15,26 +15,46 @@ const cheerio = require('cheerio');
 // In-memory OTP store (for production, use Redis or DB)
 const otpStore = {}; // { email: { otp, expiresAt } }
 
-// Configure nodemailer transporter
-const emailPass = (process.env.EMAIL_PASS || '').replace(/\s+/g, '');
+// ======================= EMAIL CONFIGURATION =======================
+
+console.log("========== EMAIL CONFIGURATION ==========");
+console.log("EMAIL_USER:", process.env.EMAIL_USER);
+console.log("EMAIL_PASS Exists:", !!process.env.EMAIL_PASS);
+
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: emailPass,
-  },
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // true only for port 465
+
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: (process.env.EMAIL_PASS || "").replace(/\s+/g, ""),
+    },
+
+    connectionTimeout: 30000,
+    greetingTimeout: 30000,
+    socketTimeout: 30000,
+
+    tls: {
+        rejectUnauthorized: false,
+    },
 });
 
-// Verify nodemailer transporter configuration on startup
-transporter.verify((error) => {
-  if (error) {
-    console.warn('⚠️ Nodemailer Transporter verification failed:', error.message);
-    console.warn('👉 Make sure EMAIL_USER and EMAIL_PASS in your .env are correct and 2-Step Verification is enabled.');
-  } else {
-    console.log('✅ Nodemailer Transporter is ready to send emails');
-  }
-});
+(async () => {
+    try {
+        await transporter.verify();
 
+        console.log("==================================");
+        console.log("✅ SMTP CONNECTION SUCCESSFUL");
+        console.log("Ready to send emails.");
+        console.log("==================================");
+    } catch (err) {
+        console.log("==================================");
+        console.error("❌ SMTP VERIFICATION FAILED");
+        console.error(err);
+        console.log("==================================");
+    }
+})();
 
 // Remove OpenAI import and usage
 // const { OpenAI } = require('openai');
