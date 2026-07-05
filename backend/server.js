@@ -16,13 +16,25 @@ const cheerio = require('cheerio');
 const otpStore = {}; // { email: { otp, expiresAt } }
 
 // Configure nodemailer transporter
+const emailPass = (process.env.EMAIL_PASS || '').replace(/\s+/g, '');
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    pass: emailPass,
   },
 });
+
+// Verify nodemailer transporter configuration on startup
+transporter.verify((error) => {
+  if (error) {
+    console.warn('⚠️ Nodemailer Transporter verification failed:', error.message);
+    console.warn('👉 Make sure EMAIL_USER and EMAIL_PASS in your .env are correct and 2-Step Verification is enabled.');
+  } else {
+    console.log('✅ Nodemailer Transporter is ready to send emails');
+  }
+});
+
 
 // Remove OpenAI import and usage
 // const { OpenAI } = require('openai');
@@ -711,6 +723,11 @@ app.post('/api/auth/send-otp', async (req, res) => {
     res.json({ success: true });
   } catch (err) {
     console.error('Failed to send OTP email:', err);
+    if (err.code === 'EAUTH' || err.message.includes('Username and Password not accepted') || err.message.includes('535')) {
+      return res.status(500).json({
+        error: 'Gmail SMTP authentication failed. Please ensure the EMAIL_USER and EMAIL_PASS in the backend .env file are correct and that a valid Google App Password is used.'
+      });
+    }
     res.status(500).json({ error: 'Failed to send OTP email. Please try again later.' });
   }
 });
